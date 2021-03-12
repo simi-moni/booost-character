@@ -1,5 +1,6 @@
 import { Container, Sprite } from "pixi.js";
 import gsap from "gsap";
+import Fire from "./Fire";
 
 export default class Rocket extends Container {
   /**
@@ -9,7 +10,7 @@ export default class Rocket extends Container {
    * @param {Number} acceleration - The value which determines the acceleration of the rocket
    * @param {Number} handling - The value which determines the handling of the rocket
    */
-  constructor({ name = 'rocket', textureName, speed, acceleration, handling }) {
+  constructor({ name = 'rocket', textureName, speed, acceleration, handling, fireProps }) {
     super();
 
     this.name = name;
@@ -21,12 +22,35 @@ export default class Rocket extends Container {
     this._inner = new Container();
     this._inner.name = 'rocket-inner';
     this.addChild(this._inner);
-    
+
+    this._addFire(fireProps);
     this._createBody(textureName);
   }
 
+  get fire() {
+    return this._fire;
+  }
+
+  _addFire(props) {
+    this._fire = new Fire();
+    this._fire.angle = props.angle;
+    this._fire.x = props.x;
+    this._fire.y = props.y;
+    this._fire.scale.set(props.scale);
+
+    this._inner.addChild(this._fire);
+  }
+
+  ignite() {
+    this.fire.ignite();
+  }
+
+  extinquish() {
+    this.fire.extinguish();
+  }
+
   async show() {
-    await gsap.fromTo(this._inner, { y: -150, alpha: 0}, { y: 0, alpha: 1, ease: 'elastic(1,0.5)', duration: 1.5 });
+    await gsap.fromTo(this._inner, { y: -150, alpha: 0 }, { y: 0, alpha: 1, ease: 'elastic(1,0.5)', duration: 1.5 });
     this.idle();
   }
 

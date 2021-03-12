@@ -24,13 +24,32 @@ export default class ProgressBar extends Container {
 
     this._createBackground();
     this._createBadge();
+    this._createBar();
 
     this.set({ value });
   }
 
   set({ value }) {
     this._value = value;
+
+    gsap.to(this._bar, { width: this.background.width * this._value / this._max });
+
     this._badge.getChildByName('value').text = `${this._label.toUpperCase()}: ${this._value}`;
+  }
+
+  _createBar() {
+    this._bar = new Graphics();
+    this._bar.beginFill(0x0000ff);
+    this._bar.drawRect(0, 0, this._width, 25);
+    this._bar.endFill();
+    this._bar.alpha = 0.5;
+    this._bar.x = -this._width / 2;
+
+    this.addChild(this._bar);
+  }
+
+  get bar() {
+    return this._bar;
   }
 
   /**
