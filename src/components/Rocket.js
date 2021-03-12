@@ -45,7 +45,7 @@ export default class Rocket extends Container {
     this.fire.ignite();
   }
 
-  extinquish() {
+  extinguish() {
     this.fire.extinguish();
   }
 
